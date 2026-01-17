@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Trash2, ArrowRight } from 'lucide-react';
 
 interface Task {
@@ -10,26 +10,49 @@ interface Task {
 }
 
 export default function LeverageLab() {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<any[]>([]);
     const [newTask, setNewTask] = useState('');
     const [impact, setImpact] = useState<'High' | 'Low'>('High');
     const [effort, setEffort] = useState<'High' | 'Low'>('Low');
 
-    const addTask = () => {
+    // Load Tasks
+    useEffect(() => {
+        import('@/lib/persistence').then(mod => {
+            mod.getTasks().then(setTasks);
+        });
+    }, []);
+
+    const addTask = async () => {
         if (!newTask.trim()) return;
-        const task: Task = {
-            id: Math.random().toString(36).substr(2, 9),
-            name: newTask,
-            impact,
-            effort
-        };
-        setTasks([...tasks, task]);
-        setNewTask('');
+
+        try {
+            const { saveTask } = await import('@/lib/persistence');
+            const savedTask = await saveTask({
+                title: newTask,
+                impact,
+                effort,
+                status: 'todo'
+            });
+            setTasks([savedTask, ...tasks]);
+            setNewTask('');
+        } catch (e) {
+            console.error(e);
+            alert("Failed to save task");
+        }
     };
 
-    const removeTask = (id: string) => {
-        setTasks(tasks.filter(t => t.id !== id));
+    const removeTask = async (id: string) => {
+        try {
+            const { deleteTask } = await import('@/lib/persistence');
+            await deleteTask(id);
+            setTasks(tasks.filter(t => t.id !== id));
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete task");
+        }
     };
+
+    // ... (rest of logic same) ...
 
     const getQuadrant = (i: string, e: string) => {
         if (i === 'High' && e === 'Low') return 'DO (Quick Wins)';
@@ -48,7 +71,7 @@ export default function LeverageLab() {
                 <ul className="space-y-2">
                     {qTasks.map(t => (
                         <li key={t.id} className="flex justify-between items-start group text-sm">
-                            <span>{t.name}</span>
+                            <span>{t.title || t.name}</span>
                             <button onClick={() => removeTask(t.id)} className="opacity-0 group-hover:opacity-100 text-red-500">
                                 <Trash2 size={14} />
                             </button>

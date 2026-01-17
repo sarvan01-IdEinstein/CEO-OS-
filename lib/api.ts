@@ -173,6 +173,28 @@ export async function getFile(subpath: string): Promise<ReviewFile | null> {
         return getLocalFile(subpath);
     }
 
+    // 5. Handle Interviews (Hybrid: DB -> FS Fallback)
+    if (subpath.startsWith('interviews/')) {
+        const type = subpath.replace('interviews/', '').replace('.md', '');
+        const { data } = await supabase
+            .from('frameworks')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('type', type)
+            .single();
+
+        if (data && data.content) {
+            return {
+                name: path.basename(subpath),
+                path: subpath,
+                slug: type,
+                content: data.content,
+                frontmatter: data.data || {}
+            };
+        }
+        return getLocalFile(subpath);
+    }
+
     return null;
 }
 
@@ -270,6 +292,23 @@ export async function saveFile(subpath: string, content: string) {
 
         if (error) {
             console.error("Supabase Save Error (Frameworks):", error);
+            throw new Error(error.message);
+        }
+        return;
+    }
+
+    // 4. Interviews
+    if (subpath.startsWith('interviews/')) {
+        const type = subpath.replace('interviews/', '').replace('.md', '');
+        const { error } = await supabase.from('frameworks').upsert({
+            user_id: user.id,
+            type: type,
+            content: content,
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id, type' });
+
+        if (error) {
+            console.error("Supabase Save Error (Interviews):", error);
             throw new Error(error.message);
         }
         return;

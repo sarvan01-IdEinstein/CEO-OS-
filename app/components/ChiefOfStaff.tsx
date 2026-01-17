@@ -16,6 +16,25 @@ export default function ChiefOfStaff() {
         if (isOpen) scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
     }, [messages, isOpen]);
 
+    // Proactive Check
+    useEffect(() => {
+        const checkPriority = async () => {
+            try {
+                const res = await fetch('/api/briefing', { method: 'POST' });
+                const data = await res.json();
+                if (data.priority === 'high') {
+                    setIsOpen(true);
+                    setMessages(prev => [...prev, { role: 'assistant', content: "🚨 **Attention, CEO.**\n\nI have detected critical items requiring your immediate review. Shall I proceed with the Morning Briefing?" }]);
+                }
+            } catch (e) {
+                console.error("Proactive check failed", e);
+            }
+        };
+        // Small delay to let page load first
+        const timer = setTimeout(checkPriority, 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
     const handleSend = async () => {
         if (!input.trim()) return;
         const userMsg = input;
@@ -23,34 +42,51 @@ export default function ChiefOfStaff() {
         setInput('');
         setLoading(true);
 
-        const apiKey = localStorage.getItem('openai_api_key');
-        if (!apiKey) {
-            setMessages(prev => [...prev, { role: 'assistant', content: "Please configure your OpenAI API Key in Settings first." }]);
-            setLoading(false);
-            return;
-        }
-
         try {
-            const res = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-4o',
-                    messages: [
-                        { role: 'system', content: "You are the Chief of Staff for a high-performance CEO. Be concise, strategic, and ruthless about prioritization. Use the tone of Marcus Aurelius meets Steve Jobs." },
-                        ...messages.map(m => ({ role: m.role, content: m.content })),
-                        { role: 'user', content: userMsg }
-                    ]
-                })
-            });
-            const data = await res.json();
-            const reply = data.choices?.[0]?.message?.content || "Connection failed.";
-            setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+            const { callAI } = await import('@/lib/ai');
+            const response = await callAI([
+                { role: 'system', content: "You are the Chief of Staff. Be concise, strategic, and ruthless." },
+                ...messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+                { role: 'user', content: userMsg }
+            ]);
+            setMessages(prev => [...prev, { role: 'assistant', content: response.content }]);
+
         } catch (e) {
-            setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to neural link." }]);
+            console.error(e);
+            setMessages(prev => [...prev, { role: 'assistant', content: "Error connecting to neural link. Check settings." }]);
+        }
+        setLoading(false);
+    };
+
+    const handleBriefing = async () => {
+        setLoading(true);
+        try {
+            // 1. Get Context from our internal API
+            const contextRes = await fetch('/api/briefing', { method: 'POST' });
+            const { context } = await contextRes.json();
+
+            // 2. Ask AI to synthesize
+            const prompt = `
+            Analyze this data and give me a Morning Briefing.
+            
+            CONTEXT:
+            - OKRs: ${JSON.stringify(context.okrs)}
+            - TASKS: ${JSON.stringify(context.tasks)}
+            - DECISIONS: ${JSON.stringify(context.decisions)}
+            - LAST LOG: ${JSON.stringify(context.lastLog)}
+            `;
+
+            const { callAI } = await import('@/lib/ai');
+            const response = await callAI([
+                { role: 'system', content: "You are the Chief of Staff. Generate a brutal, bulleted Morning Briefing based on the data. Focus on what is falling behind." },
+                { role: 'user', content: prompt }
+            ]);
+
+            setMessages(prev => [...prev, { role: 'assistant', content: response.content }]);
+
+        } catch (e) {
+            console.error(e);
+            setMessages(prev => [...prev, { role: 'assistant', content: "Briefing failed. ensure AI settings are configured." }]);
         }
         setLoading(false);
     };
@@ -70,15 +106,20 @@ export default function ChiefOfStaff() {
                                 <Bot className="text-[var(--accent)]" />
                                 <h3 className="font-bold text-sm">Chief of Staff</h3>
                             </div>
-                            <button onClick={() => setIsOpen(false)} className="hover:text-[var(--accent)]"><X size={18} /></button>
+                            <div className="flex items-center gap-2">
+                                <button onClick={handleBriefing} className="text-xs bg-[var(--accent)]/10 hover:bg-[var(--accent)] hover:text-white px-2 py-1 rounded transition-colors" title="Generate Morning Briefing">
+                                    <Sparkles size={14} /> Brief Me
+                                </button>
+                                <button onClick={() => setIsOpen(false)} className="hover:text-[var(--accent)]"><X size={18} /></button>
+                            </div>
                         </div>
 
                         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${m.role === 'user'
-                                            ? 'bg-[var(--fg)] text-[var(--bg-app)] rounded-tr-sm'
-                                            : 'bg-[var(--surface)] border border-[var(--border)] rounded-tl-sm shadow-sm'
+                                        ? 'bg-[var(--fg)] text-[var(--bg-app)] rounded-tr-sm'
+                                        : 'bg-[var(--surface)] border border-[var(--border)] rounded-tl-sm shadow-sm'
                                         }`}>
                                         {m.content}
                                     </div>

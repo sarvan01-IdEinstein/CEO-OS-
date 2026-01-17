@@ -6,7 +6,8 @@ import WisdomWidget from './components/WisdomWidget';
 import MementoMori from './components/MementoMori';
 import DailyCycleWidget from './components/DailyCycleWidget';
 import Link from 'next/link';
-import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power } from 'lucide-react';
+import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power, Brain } from 'lucide-react';
+import OKRWidget from './components/OKRWidget';
 
 export default async function Home() {
   const scores = await getLifeMapScores();
@@ -63,6 +64,9 @@ export default async function Home() {
         {/* Left Col: Actions & Context */}
         <div className="col-span-8 space-y-6">
           <DailyCycleWidget />
+
+          {/* OKR Dashboard */}
+          <OKRWidget />
 
           <div className="grid grid-cols-2 gap-6">
             <ActionCard

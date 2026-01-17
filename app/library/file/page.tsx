@@ -49,13 +49,6 @@ function FilePageContent() {
         setInput('');
         setAiLoading(true);
 
-        const apiKey = localStorage.getItem('openai_api_key');
-        if (!apiKey) {
-            setMessages(prev => [...prev, { role: 'assistant', content: "Please configure your OpenAI API Key in Settings first." }]);
-            setAiLoading(false);
-            return;
-        }
-
         try {
             const systemPrompt = `You are an expert executive coach and strategist. The user is viewing a knowledge document. Help them apply its principles to their specific situation.
 
@@ -66,23 +59,78 @@ ${content.slice(0, 3000)}
 
 Be concise, actionable, and Socratic. Ask clarifying questions if needed.`;
 
-            const res = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-                body: JSON.stringify({
-                    model: 'gpt-4o',
-                    messages: [
-                        { role: 'system', content: systemPrompt },
-                        ...messages.map(m => ({ role: m.role, content: m.content })),
-                        { role: 'user', content: userMsg }
-                    ]
-                })
-            });
-            const data = await res.json();
-            const reply = data.choices?.[0]?.message?.content || "I couldn't process that.";
-            setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+            const { callAI } = await import('@/lib/ai');
+            const response = await callAI([
+                { role: 'system', content: systemPrompt },
+                ...messages.map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
+                { role: 'user', content: userMsg }
+            ]);
+            setMessages(prev => [...prev, { role: 'assistant', content: response.content }]);
         } catch (e) {
             setMessages(prev => [...prev, { role: 'assistant', content: "Connection error. Please try again." }]);
+        }
+        setAiLoading(false);
+    };
+
+    const handleGenerateOKRs = async () => {
+        setAiLoading(true);
+
+        try {
+            const { callAI } = await import('@/lib/ai');
+            const response = await callAI([
+                { role: 'system', content: `Extract minimal, high-impact OKRs from this strategy document. Return ONLY valid JSON array.` },
+                {
+                    role: 'user', content: `Extract 1-3 Objectives. For each, extract 1-3 Key Results (measurable).
+                    
+                    Source Text:
+                    ${content}
+
+                    Return ONLY valid JSON in this format:
+                    [
+                      {
+                        "title": "Objective Title",
+                        "key_results": [
+                            { "title": "KR Title", "target": 100, "unit": "%" }
+                        ]
+                      }
+                    ]` }
+            ]);
+
+            const jsonStr = response.content.replace(/```json|```/g, '').trim();
+            const parsed = JSON.parse(jsonStr);
+
+            const { saveOKR } = await import('@/lib/persistence');
+
+            for (const obj of parsed) {
+                // Save Objective
+                const savedObj = await saveOKR({
+                    title: obj.title,
+                    type: 'OBJECTIVE',
+                    current_value: 0,
+                    target_value: 100,
+                    unit: '%',
+                    status: 'on_track'
+                });
+
+                // Save KRs
+                for (const kr of obj.key_results) {
+                    await saveOKR({
+                        title: kr.title,
+                        type: 'KEY_RESULT',
+                        parent_id: savedObj.id,
+                        current_value: 0,
+                        target_value: kr.target || 100,
+                        unit: kr.unit || '%',
+                        status: 'on_track'
+                    });
+                }
+            }
+            alert(`Success! Generated ${parsed.length} Objectives and ${parsed.reduce((acc: any, o: any) => acc + o.key_results.length, 0)} Key Results.`);
+            window.location.reload(); // Refresh to show new data if needed
+
+        } catch (e) {
+            console.error(e);
+            alert("Failed to generate OKRs. Check AI settings or content.");
         }
         setAiLoading(false);
     };
@@ -101,9 +149,17 @@ Be concise, actionable, and Socratic. Ask clarifying questions if needed.`;
                     onClick={() => { setShowAI(!showAI); if (!showAI && messages.length === 0) setMessages([{ role: 'assistant', content: "How can I help you apply this framework?" }]); }}
                     className={`btn-primary flex items-center gap-2 ${showAI ? 'bg-rose-500' : ''}`}
                 >
-                    {showAI ? <X size={16} /> : <Sparkles size={16} />}
                     {showAI ? 'Close AI' : 'Apply with AI'}
                 </button>
+                {path?.includes('goals/') && (
+                    <button
+                        onClick={handleGenerateOKRs}
+                        disabled={aiLoading}
+                        className="btn bg-[var(--accent)] text-white flex items-center gap-2 ml-4 animate-fade-in"
+                    >
+                        <Sparkles size={16} /> Generate OKRs
+                    </button>
+                )}
             </div>
 
             {/* Main Content */}
