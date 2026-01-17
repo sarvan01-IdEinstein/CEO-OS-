@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { ReviewFile, LifeMapScores } from './types';
 
-const CONTENT_DIR = path.join(process.cwd(), '../ceo-personal-os');
+const CONTENT_DIR = path.join(process.cwd(), 'data');
 
 export function getContentPath(subpath: string) {
     return path.join(CONTENT_DIR, subpath);
