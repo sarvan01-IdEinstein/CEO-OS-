@@ -1,7 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, FileDown } from 'lucide-react';
+import { exportReviewToPDF } from '@/lib/export/pdf';
 
 export default function ReviewsIndex() {
     const [files, setFiles] = useState<any[]>([]);
@@ -66,6 +67,9 @@ export default function ReviewsIndex() {
                                     <span className="text-[var(--muted)]">Energy: {file.energyLevel || '-'}</span>
                                     <div className="flex gap-3">
                                         <Link href={`/library/file?path=${encodeURIComponent(file.path)}`} className="text-[var(--accent)] font-bold text-xs uppercase">View</Link>
+                                        <button onClick={() => exportReviewToPDF(file.path)} className="text-green-400 p-1" title="Export PDF">
+                                            <FileDown size={14} />
+                                        </button>
                                         <button onClick={() => handleDelete(file.path)} className="text-red-400 p-1">
                                             <Trash2 size={14} />
                                         </button>
@@ -81,10 +85,17 @@ export default function ReviewsIndex() {
                                     {type}
                                 </span>
                                 <span className="col-span-2 font-mono opacity-60">{file.energyLevel || '-'}</span>
-                                <div className="col-span-2 flex justify-end gap-3 items-center">
+                                <div className="col-span-2 flex justify-end gap-2 items-center">
                                     <Link href={`/library/file?path=${encodeURIComponent(file.path)}`} className="text-[var(--accent)] hover:underline font-bold text-xs uppercase tracking-wider">
                                         View
                                     </Link>
+                                    <button
+                                        onClick={() => exportReviewToPDF(file.path)}
+                                        className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-green-500/10 rounded"
+                                        title="Export as PDF"
+                                    >
+                                        <FileDown size={14} />
+                                    </button>
                                     <button
                                         onClick={() => handleDelete(file.path)}
                                         className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded"

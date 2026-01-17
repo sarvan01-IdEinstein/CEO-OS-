@@ -5,11 +5,14 @@ import Heatmap from './components/Heatmap';
 import WisdomWidget from './components/WisdomWidget';
 import MementoMori from './components/MementoMori';
 import DailyCycleWidget from './components/DailyCycleWidget';
+import TeamPulseWidget from './components/TeamPulseWidget';
 import Link from 'next/link';
 import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power, Brain } from 'lucide-react';
 import OKRWidget from './components/OKRWidget';
 import { getTimeBasedGreeting, getQuarterProgress } from '@/lib/utils/date';
+import { getUserName } from '@/lib/utils/profile';
 
+// Force rebuild
 export default async function Home() {
   const scores = await getLifeMapScores();
   const northStar = await getFile('north_star.md');
@@ -19,6 +22,7 @@ export default async function Home() {
     .slice(0, 3);
   const analytics = await getAnalyticsData();
   const wisdom = await getRandomWisdom();
+  const userName = getUserName();
 
   // Extract Mission
   let mission = "Define your mission in north_star.md";
@@ -36,26 +40,12 @@ export default async function Home() {
     <div className="space-y-10 animate-fade-in">
       {/* Header Section */}
       <section className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 pb-4">
-        <div>
+        <div className="flex-1">
           <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold mb-2">System Online</p>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">{getTimeBasedGreeting()}, CEO.</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">{getTimeBasedGreeting()} {userName}.</h1>
           <p className="text-[var(--muted)] text-lg lg:text-xl font-light italic max-w-2xl">
             "{mission.replace(/\[WRITE HERE\]/g, 'Building the future...')}"
           </p>
-        </div>
-        <div className="glass-card px-6 py-4 flex flex-col gap-2 border border-[var(--accent)]/20 min-w-[180px] shrink-0">
-          <div className="text-[10px] font-bold uppercase text-[var(--muted)] tracking-widest">Energy Trend</div>
-          <div className="flex items-end justify-between gap-4">
-            <div className="h-12 flex-1">
-              <EnergyChart data={analytics.energyTrend} />
-            </div>
-            <div className="text-right">
-              <span className="text-3xl font-mono font-bold text-[var(--accent)]">
-                {analytics.energyTrend[analytics.energyTrend.length - 1]?.energy || '-'}
-              </span>
-              <span className="text-xs text-[var(--muted)] ml-1">/10</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -121,6 +111,23 @@ export default async function Home() {
 
         {/* Right Col: Signal */}
         <div className="lg:col-span-4 space-y-6">
+
+          {/* Energy Trend - Moved Here */}
+          <div className="glass-card flex flex-col gap-4 border border-[var(--accent)]/20">
+            <div className="flex justify-between items-center">
+              <div className="text-[10px] font-bold uppercase text-[var(--muted)] tracking-widest">Energy Trend</div>
+              <div className="text-right flex items-baseline gap-1">
+                <span className="text-3xl font-mono font-bold text-[var(--accent)]">
+                  {analytics.energyTrend[analytics.energyTrend.length - 1]?.energy || '-'}
+                </span>
+                <span className="text-xs text-[var(--muted)]">/10</span>
+              </div>
+            </div>
+            <div className="h-32 w-full">
+              <EnergyChart data={analytics.energyTrend} />
+            </div>
+          </div>
+
           <div className="glass-card h-[300px] sm:h-[400px] flex flex-col relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-50"></div>
             <div className="flex items-center justify-between mb-4 z-10">
@@ -133,6 +140,8 @@ export default async function Home() {
               <LifeMapRadar scores={scores} />
             </div>
           </div>
+
+          <TeamPulseWidget />
 
           <div className="glass-card bg-gradient-to-br from-[var(--glass-surface)] to-[var(--accent)]/10">
             <div className="flex items-center gap-3 mb-6 text-[var(--accent)]">
@@ -151,8 +160,8 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

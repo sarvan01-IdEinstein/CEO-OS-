@@ -42,12 +42,16 @@ export default function Sidebar() {
             </AnimatePresence>
 
             {/* Sidebar */}
-            <aside className={`
-                fixed left-0 top-0 h-full w-64 glass-panel z-50 flex flex-col p-6
-                transition-transform duration-300 ease-in-out
-                ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-                lg:translate-x-0
-            `}>
+            <aside
+                className={`
+                    fixed left-0 top-0 h-full w-64 glass-panel z-50 flex flex-col p-6
+                    transition-transform duration-300 ease-in-out
+                    ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+                    lg:translate-x-0
+                `}
+                role="navigation"
+                aria-label="Main navigation"
+            >
                 <div className="shrink-0 mb-6 px-2 mt-2">
                     <h1 className="text-2xl font-serif font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-[var(--fg)] to-[var(--muted)]">
                         CEO.OS
@@ -57,7 +61,7 @@ export default function Sidebar() {
                     </p>
                 </div>
 
-                <nav className="flex-1 overflow-y-auto space-y-2 pr-1">
+                <nav className="flex-1 overflow-y-auto space-y-2 pr-1" aria-label="Primary">
                     <NavLink href="/" icon={<Home size={18} />} label="Dashboard" onClick={handleNavClick} />
 
                     <p className="px-4 text-[10px] font-bold uppercase text-[var(--muted)] tracking-widest mb-2 mt-6">Core</p>

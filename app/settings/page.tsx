@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Save, Lock, Eye, EyeOff, Server, Cloud, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Save, Lock, Eye, EyeOff, Server, Cloud, RefreshCw, Download, Upload, Database } from 'lucide-react';
 import { getAISettings, saveAISettings, getOllamaModels, AIProvider } from '@/lib/ai';
+import { exportAllData, importData, downloadJSON, readJSONFile, BackupData } from '@/lib/export/backup';
 
 export default function SettingsPage() {
     const [provider, setProvider] = useState<AIProvider>('ollama');
@@ -12,6 +13,12 @@ export default function SettingsPage() {
     const [saved, setSaved] = useState(false);
     const [availableModels, setAvailableModels] = useState<string[]>([]);
     const [loadingModels, setLoadingModels] = useState(false);
+
+    // Backup state
+    const [exporting, setExporting] = useState(false);
+    const [importing, setImporting] = useState(false);
+    const [backupMessage, setBackupMessage] = useState('');
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const settings = getAISettings();
@@ -179,9 +186,79 @@ export default function SettingsPage() {
                 </div>
             </div>
 
-            <div className="glass-card opacity-50 pointer-events-none">
-                <h2 className="text-xl font-bold mb-4">Data Export</h2>
-                <p className="text-sm">Coming soon in v2.1</p>
+            {/* Data Backup & Restore */}
+            <div className="glass-card">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Database size={20} className="text-[var(--accent)]" />
+                    Data Backup & Restore
+                </h2>
+                <p className="text-sm text-[var(--muted)] mb-6">
+                    Export all your reviews, goals, and settings as a JSON file for backup or transfer.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                    <button
+                        onClick={async () => {
+                            setExporting(true);
+                            setBackupMessage('');
+                            try {
+                                const data = await exportAllData();
+                                downloadJSON(data);
+                                setBackupMessage('Backup downloaded successfully!');
+                            } catch (e) {
+                                setBackupMessage('Export failed: ' + (e instanceof Error ? e.message : 'Unknown error'));
+                            }
+                            setExporting(false);
+                        }}
+                        disabled={exporting}
+                        className="btn gap-2"
+                    >
+                        <Download size={16} />
+                        {exporting ? 'Exporting...' : 'Export Backup'}
+                    </button>
+
+                    <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={importing}
+                        className="btn-ghost border border-[var(--glass-border)] gap-2"
+                    >
+                        <Upload size={16} />
+                        {importing ? 'Importing...' : 'Import Backup'}
+                    </button>
+
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".json"
+                        className="hidden"
+                        onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+
+                            setImporting(true);
+                            setBackupMessage('');
+                            try {
+                                const data = await readJSONFile(file);
+                                const result = await importData(data);
+                                if (result.success) {
+                                    setBackupMessage(`Imported ${result.imported} items successfully!`);
+                                } else {
+                                    setBackupMessage(`Import completed with errors: ${result.errors.join(', ')}`);
+                                }
+                            } catch (e) {
+                                setBackupMessage('Import failed: ' + (e instanceof Error ? e.message : 'Unknown error'));
+                            }
+                            setImporting(false);
+                            e.target.value = '';
+                        }}
+                    />
+                </div>
+
+                {backupMessage && (
+                    <div className={`mt-4 p-3 rounded-lg text-sm ${backupMessage.includes('failed') || backupMessage.includes('errors') ? 'bg-red-500/10 text-red-500' : 'bg-green-500/10 text-green-500'}`}>
+                        {backupMessage}
+                    </div>
+                )}
             </div>
         </div>
     );

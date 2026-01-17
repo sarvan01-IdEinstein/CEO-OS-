@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Check, Sun, Target, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 export default function MorningPrime() {
     const [step, setStep] = useState(0);
@@ -30,7 +31,7 @@ export default function MorningPrime() {
     const handleNext = () => setStep(s => s + 1);
 
     const handleSubmit = async () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = format(new Date(), 'yyyy-MM-dd');
         const content = `# Daily Check-in\n*Date: ${today}*\n\n**Energy Level (1-10):** [${data.energy}]\n\n1. **One Meaningful Win**:\n   - ${data.win}\n\n2. **One Friction Point**:\n   - ${data.friction}\n\n3. **One Thing to Let Go Of**:\n   - ${data.letGo}\n\n4. **The Single Major Priority for Tomorrow**:\n   - ${data.priority}`;
 
         await fetch('/api/files', {

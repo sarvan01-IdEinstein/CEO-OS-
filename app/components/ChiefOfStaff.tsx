@@ -100,6 +100,8 @@ export default function ChiefOfStaff() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.9 }}
                         className="fixed bottom-20 sm:bottom-24 right-4 sm:right-8 left-4 sm:left-auto w-auto sm:w-96 h-[70vh] sm:h-[500px] max-h-[600px] glass-card flex flex-col p-0 z-50 shadow-2xl border-t border-[var(--glass-border)]"
+                        role="dialog"
+                        aria-label="Chief of Staff AI assistant"
                     >
                         <div className="p-4 border-b border-[var(--border)] flex justify-between items-center bg-[var(--surface)]/50 backdrop-blur rounded-t-2xl">
                             <div className="flex items-center gap-2">
@@ -110,7 +112,7 @@ export default function ChiefOfStaff() {
                                 <button onClick={handleBriefing} className="text-xs bg-[var(--accent)]/10 hover:bg-[var(--accent)] hover:text-white px-2 py-1 rounded transition-colors" title="Generate Morning Briefing">
                                     <Sparkles size={14} /> Brief Me
                                 </button>
-                                <button onClick={() => setIsOpen(false)} className="hover:text-[var(--accent)]"><X size={18} /></button>
+                                <button onClick={() => setIsOpen(false)} className="hover:text-[var(--accent)]" aria-label="Close chat"><X size={18} /></button>
                             </div>
                         </div>
 
@@ -136,8 +138,9 @@ export default function ChiefOfStaff() {
                                     onKeyDown={e => e.key === 'Enter' && handleSend()}
                                     placeholder="Ask for strategy..."
                                     className="w-full pl-4 pr-10 py-3 rounded-full bg-[var(--bg-app)]/50 border border-[var(--border)] focus:ring-2 focus:ring-[var(--accent)] outline-none text-sm"
+                                    aria-label="Chat message input"
                                 />
-                                <button onClick={handleSend} className="absolute right-2 top-2 p-1.5 text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white rounded-full transition-colors">
+                                <button onClick={handleSend} className="absolute right-2 top-2 p-1.5 text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white rounded-full transition-colors" aria-label="Send message">
                                     <Send size={16} />
                                 </button>
                             </div>
@@ -149,6 +152,8 @@ export default function ChiefOfStaff() {
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--fg)] text-[var(--bg-app)] shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group border border-[var(--glass-border)]"
+                aria-label={isOpen ? 'Close AI assistant' : 'Open AI assistant'}
+                aria-expanded={isOpen}
             >
                 {isOpen ? <X size={24} /> : <Sparkles size={24} className="group-hover:animate-spin-slow" />}
             </button>

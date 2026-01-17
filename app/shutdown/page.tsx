@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ArrowRight, Moon, Power, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { format } from 'date-fns';
 
 export default function Shutdown() {
     const [step, setStep] = useState(0);
@@ -15,8 +16,8 @@ export default function Shutdown() {
 
     useEffect(() => {
         // Fetch Today's Objective context
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+        const today = format(new Date(), 'yyyy-MM-dd');
+        const yesterday = format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
 
         const init = async () => {
             // Try Today's File first
@@ -42,7 +43,7 @@ export default function Shutdown() {
     const handleNext = () => setStep(s => s + 1);
 
     const handleShutdown = async () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = format(new Date(), 'yyyy-MM-dd');
         setStep(3); // Animation
 
         // 1. Read Today's File (or create if missing)
