@@ -3,9 +3,9 @@ import LifeMapRadar from '../../components/LifeMapRadar';
 import Link from 'next/link';
 import { ArrowLeft, Edit2 } from 'lucide-react';
 
-export default function LifeMapPage() {
-    const scores = getLifeMapScores();
-    const file = getFile('frameworks/life_map.md');
+export default async function LifeMapPage() {
+    const scores = await getLifeMapScores();
+    const file = await getFile('frameworks/life_map.md');
 
     return (
         <div className="space-y-8 animate-fade-in">

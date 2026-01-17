@@ -158,6 +158,16 @@ export default function MorningPrime() {
 
     return (
         <div className="h-screen w-full fixed top-0 left-0 bg-[var(--bg)] z-50 flex items-center justify-center p-6">
+
+            {/* Exit/Back Button */}
+            <button
+                onClick={() => router.push('/')}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--fg)] transition-colors z-[60]"
+                title="Exit Prime"
+            >
+                <span className="text-xs font-bold uppercase tracking-widest mr-2">Exit</span>
+            </button>
+
             <AnimatePresence mode='wait'>
                 <motion.div
                     key={step}

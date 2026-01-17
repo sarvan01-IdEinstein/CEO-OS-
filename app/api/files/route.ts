@@ -7,15 +7,15 @@ export async function GET(req: NextRequest) {
     const type = searchParams.get('type'); // 'list' | 'file' | 'lifemap'
 
     if (type === 'lifemap') {
-        return NextResponse.json(getLifeMapScores());
+        return NextResponse.json(await getLifeMapScores());
     }
 
     if (type === 'list' && path) {
-        return NextResponse.json(listFiles(path));
+        return NextResponse.json(await listFiles(path));
     }
 
     if (type === 'file' && path) {
-        const file = getFile(path);
+        const file = await getFile(path);
         if (!file) return NextResponse.json({ error: 'Not found' }, { status: 404 });
         return NextResponse.json(file);
     }
@@ -32,10 +32,11 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        saveFile(path, content);
+        await saveFile(path, content);
         return NextResponse.json({ success: true });
-    } catch (e) {
-        return NextResponse.json({ error: 'Failed to save' }, { status: 500 });
+    } catch (e: any) {
+        console.error("API Save Error:", e);
+        return NextResponse.json({ error: e.message || 'Failed to save' }, { status: 500 });
     }
 }
 
@@ -46,8 +47,9 @@ export async function DELETE(req: NextRequest) {
     if (!path) return NextResponse.json({ error: 'Missing path' }, { status: 400 });
 
     try {
+        // Dynamic import not strictly needed if we updated lib/api, but keeping structure
         const { deleteFile } = await import('@/lib/api');
-        const success = deleteFile(path);
+        const success = await deleteFile(path);
         if (success) return NextResponse.json({ success: true });
         return NextResponse.json({ error: 'Not found' }, { status: 404 });
     } catch (e) {

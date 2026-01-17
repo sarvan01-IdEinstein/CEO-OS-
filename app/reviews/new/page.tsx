@@ -64,10 +64,16 @@ function NewReview() {
         const dateStr = format(new Date(), 'yyyy-MM-dd');
         const path = `reviews/${type}/${dateStr}.md`;
 
-        await fetch('/api/files', {
+        const res = await fetch('/api/files', {
             method: 'POST',
             body: JSON.stringify({ path, content: newContent })
         });
+
+        if (!res.ok) {
+            const err = await res.json();
+            alert('Failed to save entry: ' + (err.error || 'Unknown error'));
+            return;
+        }
 
         router.push('/reviews');
     };
@@ -140,7 +146,7 @@ function NewReview() {
             <div className="flex-1 flex overflow-hidden">
                 {/* Editor Pane */}
                 <div className={`flex-1 overflow-y-auto ${showContext ? 'border-r border-[var(--glass-border)]' : ''}`}>
-                    <div className="max-w-3xl mx-auto py-8 px-8">
+                    <div className="max-w-3xl mx-auto py-8 px-8 h-full">
                         <Editor initialContent={content} onSave={handleSave} />
                     </div>
                 </div>

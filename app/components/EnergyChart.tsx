@@ -6,7 +6,7 @@ export default function EnergyChart({ data }: { data: any[] }) {
 
     return (
         <div className="w-full h-full overflow-hidden">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100}>
                 <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
                     <Line
                         type="monotone"

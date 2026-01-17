@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { Home, PenTool, BarChart2, Book, Settings, DollarSign, User, Zap } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import SignOutButton from './SignOutButton';
 
 export default function Sidebar() {
     return (
@@ -38,10 +39,13 @@ export default function Sidebar() {
             </div>
 
             <div>
-                <Link href="/settings" className="flex items-center gap-3 text-sm text-[var(--muted)] px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors">
-                    <Settings size={16} />
-                    <span>System Settings</span>
-                </Link>
+                <div className="mb-2">
+                    <Link href="/settings" className="flex items-center gap-3 text-sm text-[var(--muted)] px-3 py-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors">
+                        <Settings size={16} />
+                        <span>System Settings</span>
+                    </Link>
+                </div>
+                <SignOutButton />
             </div>
         </aside>
     );

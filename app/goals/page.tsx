@@ -2,9 +2,9 @@ import { getFile } from '@/lib/api';
 import Editor from '@/app/components/Editor'; // We might use a read-only view or just text
 
 export default async function GoalsPage() {
-    const y1 = getFile('goals/1_year.md');
-    const y3 = getFile('goals/3_year.md');
-    const y10 = getFile('goals/10_year.md');
+    const y1 = await getFile('goals/1_year.md');
+    const y3 = await getFile('goals/3_year.md');
+    const y10 = await getFile('goals/10_year.md');
 
     return (
         <div className="space-y-12">

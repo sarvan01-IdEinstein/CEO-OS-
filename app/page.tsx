@@ -9,13 +9,14 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power } from 'lucide-react';
 
 export default async function Home() {
-  const scores = getLifeMapScores();
-  const northStar = getFile('north_star.md');
-  const recentDailies = listFiles('reviews/daily')
+  const scores = await getLifeMapScores();
+  const northStar = await getFile('north_star.md');
+  const files = await listFiles('reviews/daily');
+  const recentDailies = files
     .filter(f => !f.name.includes('template'))
     .slice(0, 3);
-  const analytics = getAnalyticsData();
-  const wisdom = getRandomWisdom();
+  const analytics = await getAnalyticsData();
+  const wisdom = await getRandomWisdom();
 
   // Extract Mission
   let mission = "Define your mission in north_star.md";
