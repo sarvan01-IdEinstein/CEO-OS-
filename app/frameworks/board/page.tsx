@@ -144,26 +144,26 @@ export default function BoardRoom() {
     return (
         <div className="h-[85vh] flex flex-col animate-fade-in">
             {/* Header */}
-            <div className="text-center mb-8">
-                <h1 className="text-4xl font-serif font-bold mb-2">The Board Room</h1>
-                <p className="text-[var(--muted)]">Your AI-powered advisory board. Each advisor has a distinct perspective.</p>
+            <div className="text-center mb-6 sm:mb-8 px-4">
+                <h1 className="text-2xl sm:text-4xl font-serif font-bold mb-2">The Board Room</h1>
+                <p className="text-[var(--muted)] text-sm sm:text-base">Your AI-powered advisory board. Each advisor has a distinct perspective.</p>
             </div>
 
             {/* Advisor Selection */}
             {!selected && (
-                <div className="grid grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto px-4">
                     {ADVISORS.map(advisor => (
                         <button
                             key={advisor.id}
                             onClick={() => openAdvisor(advisor)}
-                            className="glass-card p-6 text-center hover:border-[var(--accent)] transition-all group"
+                            className="glass-card p-4 sm:p-6 text-center hover:border-[var(--accent)] transition-all group"
                         >
-                            <div className={clsx("w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl", advisor.color)}>
+                            <div className={clsx("w-12 h-12 sm:w-16 sm:h-16 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center text-2xl sm:text-3xl", advisor.color)}>
                                 {advisor.avatar}
                             </div>
-                            <h3 className="font-bold text-lg mb-1 group-hover:text-[var(--accent)]">{advisor.name}</h3>
+                            <h3 className="font-bold text-base sm:text-lg mb-1 group-hover:text-[var(--accent)]">{advisor.name}</h3>
                             <p className="text-xs uppercase tracking-wider text-[var(--muted)] mb-2">{advisor.role}</p>
-                            <p className="text-sm text-[var(--muted)]">{advisor.description}</p>
+                            <p className="text-xs sm:text-sm text-[var(--muted)]">{advisor.description}</p>
                         </button>
                     ))}
                 </div>
@@ -171,20 +171,20 @@ export default function BoardRoom() {
 
             {/* Chat Interface */}
             {selected && (
-                <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full">
+                <div className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-4">
                     {/* Advisor Header */}
-                    <div className="flex items-center justify-between mb-4 p-4 glass-card">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 p-4 glass-card">
                         <div className="flex items-center gap-4">
-                            <div className={clsx("w-12 h-12 rounded-full flex items-center justify-center text-2xl", selected.color)}>
+                            <div className={clsx("w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl", selected.color)}>
                                 {selected.avatar}
                             </div>
                             <div>
-                                <h2 className="font-bold">{selected.name}</h2>
+                                <h2 className="font-bold text-sm sm:text-base">{selected.name}</h2>
                                 <p className="text-xs text-[var(--muted)]">{selected.role}</p>
                             </div>
                         </div>
-                        <button onClick={() => { setSelected(null); setMessages([]); }} className="btn-ghost">
-                            <X size={18} /> Change Advisor
+                        <button onClick={() => { setSelected(null); setMessages([]); }} className="btn-ghost text-sm">
+                            <X size={18} /> <span className="hidden sm:inline">Change Advisor</span>
                         </button>
                     </div>
 

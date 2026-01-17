@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Target, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 import { getOKRs, OKR } from '@/lib/persistence';
 import { motion } from 'framer-motion';
+import { getCurrentQuarter } from '@/lib/utils/date';
 
 export default function OKRWidget() {
     const [okrs, setOkrs] = useState<OKR[]>([]);
@@ -39,7 +40,7 @@ export default function OKRWidget() {
                 <h2 className="text-xl font-serif font-bold flex items-center gap-2">
                     <Target className="text-[var(--accent)]" /> Active OKRs
                 </h2>
-                <div className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">Q1 2026</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-[var(--muted)]">{getCurrentQuarter()}</div>
             </div>
 
             <div className="space-y-6">

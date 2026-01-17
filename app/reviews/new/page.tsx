@@ -114,46 +114,46 @@ function NewReview() {
     return (
         <div className="h-full flex flex-col animate-fade-in">
             {/* Header */}
-            <div className="h-16 border-b border-[var(--glass-border)] flex items-center justify-between px-6 bg-[var(--glass-surface)] backdrop-blur-md sticky top-0 z-10 transition-all">
-                <div className="flex items-center gap-4">
+            <div className="min-h-14 sm:h-16 border-b border-[var(--glass-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 px-4 sm:px-6 py-2 sm:py-0 bg-[var(--glass-surface)] backdrop-blur-md sticky top-0 z-10 transition-all">
+                <div className="flex items-center gap-3 sm:gap-4">
                     <Link href="/" className="text-[var(--muted)] hover:text-[var(--fg)]"><ArrowLeft size={18} /></Link>
                     <div>
-                        <span className="text-xs uppercase tracking-widest text-[var(--muted)]">{type} Review</span>
-                        <h1 className="text-lg font-serif font-bold">Today's Entry</h1>
+                        <span className="text-[10px] sm:text-xs uppercase tracking-widest text-[var(--muted)]">{type} Review</span>
+                        <h1 className="text-base sm:text-lg font-serif font-bold">Today's Entry</h1>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={handleMagicDraft}
                         disabled={aiLoading}
-                        className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white px-3 py-1.5 rounded-full transition-all border border-[var(--accent)] disabled:opacity-50"
+                        className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all border border-[var(--accent)] disabled:opacity-50"
                     >
                         {aiLoading ? <span className="animate-spin">⏳</span> : <Sparkles size={14} />}
-                        {aiLoading ? 'Drafting...' : 'Magic Draft'}
+                        <span className="hidden sm:inline">{aiLoading ? 'Drafting...' : 'Magic Draft'}</span>
                     </button>
                     <button
                         onClick={() => setShowContext(!showContext)}
-                        className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
+                        className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
                     >
                         {showContext ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-                        {showContext ? 'Hide Context' : 'Show Context'}
+                        <span className="hidden sm:inline">{showContext ? 'Hide Context' : 'Show Context'}</span>
                     </button>
                 </div>
             </div>
 
             {/* Split View */}
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex flex-col sm:flex-row overflow-hidden">
                 {/* Editor Pane */}
-                <div className={`flex-1 overflow-y-auto ${showContext ? 'border-r border-[var(--glass-border)]' : ''}`}>
-                    <div className="max-w-3xl mx-auto py-8 px-8 h-full">
+                <div className={`flex-1 overflow-y-auto ${showContext ? 'sm:border-r border-[var(--glass-border)]' : ''}`}>
+                    <div className="max-w-3xl mx-auto py-4 sm:py-8 px-4 sm:px-8 h-full">
                         <Editor initialContent={content} onSave={handleSave} />
                     </div>
                 </div>
 
-                {/* Context Pane */}
+                {/* Context Pane - hidden on mobile unless explicitly toggled */}
                 {showContext && (
-                    <div className="w-[40%] bg-[var(--glass-surface)] overflow-y-auto border-l border-[var(--glass-border)] backdrop-blur-md">
+                    <div className="hidden sm:block w-[40%] bg-[var(--glass-surface)] overflow-y-auto border-l border-[var(--glass-border)] backdrop-blur-md">
                         <div className="p-8">
                             <div className="mb-6 pb-4 border-b border-[var(--glass-border)]">
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Aligned Context</span>

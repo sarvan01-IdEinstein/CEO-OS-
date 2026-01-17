@@ -43,15 +43,15 @@ const tools = [
 
 export default function ToolsHub() {
     return (
-        <div className="max-w-4xl mx-auto space-y-12 animate-fade-in">
-            <div className="text-center space-y-4">
-                <h1 className="text-4xl font-serif font-bold">Thinking Tools</h1>
-                <p className="text-[var(--muted)] max-w-xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12 animate-fade-in px-2">
+            <div className="text-center space-y-3 sm:space-y-4">
+                <h1 className="text-2xl sm:text-4xl font-serif font-bold">Thinking Tools</h1>
+                <p className="text-[var(--muted)] max-w-xl mx-auto text-sm sm:text-base">
                     Structured frameworks to cut through complexity. Each tool guides you through a proven mental model.
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {tools.map(tool => (
                     <Link
                         key={tool.id}
@@ -61,14 +61,14 @@ export default function ToolsHub() {
                         <div className={`absolute top-0 right-0 w-32 h-32 ${tool.bg} rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity`}></div>
 
                         <div className="relative z-10">
-                            <div className={`w-12 h-12 rounded-xl ${tool.bg} flex items-center justify-center mb-4`}>
-                                <tool.icon className={tool.color} size={24} />
+                            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${tool.bg} flex items-center justify-center mb-3 sm:mb-4`}>
+                                <tool.icon className={tool.color} size={20} />
                             </div>
 
-                            <h3 className="text-xl font-bold mb-2 group-hover:text-[var(--accent)] transition-colors">
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-[var(--accent)] transition-colors">
                                 {tool.name}
                             </h3>
-                            <p className="text-[var(--muted)] text-sm mb-4">{tool.desc}</p>
+                            <p className="text-[var(--muted)] text-xs sm:text-sm mb-3 sm:mb-4">{tool.desc}</p>
 
                             {tool.ready ? (
                                 <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)] flex items-center gap-2">

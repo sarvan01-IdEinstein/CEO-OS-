@@ -8,6 +8,7 @@ import DailyCycleWidget from './components/DailyCycleWidget';
 import Link from 'next/link';
 import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power, Brain } from 'lucide-react';
 import OKRWidget from './components/OKRWidget';
+import { getTimeBasedGreeting, getQuarterProgress } from '@/lib/utils/date';
 
 export default async function Home() {
   const scores = await getLifeMapScores();
@@ -34,15 +35,15 @@ export default async function Home() {
   return (
     <div className="space-y-10 animate-fade-in">
       {/* Header Section */}
-      <section className="flex justify-between items-end pb-4">
+      <section className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 pb-4">
         <div>
           <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold mb-2">System Online</p>
-          <h1 className="text-5xl font-serif font-bold tracking-tight mb-4">Good Morning, CEO.</h1>
-          <p className="text-[var(--muted)] text-xl font-light italic max-w-2xl">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight mb-4">{getTimeBasedGreeting()}, CEO.</h1>
+          <p className="text-[var(--muted)] text-lg lg:text-xl font-light italic max-w-2xl">
             "{mission.replace(/\[WRITE HERE\]/g, 'Building the future...')}"
           </p>
         </div>
-        <div className="glass-card px-6 py-4 flex flex-col gap-2 border border-[var(--accent)]/20 min-w-[180px]">
+        <div className="glass-card px-6 py-4 flex flex-col gap-2 border border-[var(--accent)]/20 min-w-[180px] shrink-0">
           <div className="text-[10px] font-bold uppercase text-[var(--muted)] tracking-widest">Energy Trend</div>
           <div className="flex items-end justify-between gap-4">
             <div className="h-12 flex-1">
@@ -59,16 +60,16 @@ export default async function Home() {
       </section>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
 
         {/* Left Col: Actions & Context */}
-        <div className="col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-6">
           <DailyCycleWidget />
 
           {/* OKR Dashboard */}
           <OKRWidget />
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <ActionCard
               title="Weekly Review"
               desc="Strategic Reset & Plan"
@@ -119,8 +120,8 @@ export default async function Home() {
         </div>
 
         {/* Right Col: Signal */}
-        <div className="col-span-4 space-y-6">
-          <div className="glass-card h-[400px] flex flex-col relative overflow-hidden">
+        <div className="lg:col-span-4 space-y-6">
+          <div className="glass-card h-[300px] sm:h-[400px] flex flex-col relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-50"></div>
             <div className="flex items-center justify-between mb-4 z-10">
               <h3 className="font-serif font-bold text-lg">Life Map</h3>
@@ -146,7 +147,7 @@ export default async function Home() {
               </div>
               <div className="flex justify-between items-end pb-2">
                 <span className="text-sm opacity-70">Quarter Progress</span>
-                <span className="font-mono text-xl">34%</span>
+                <span className="font-mono text-xl">{getQuarterProgress()}%</span>
               </div>
             </div>
           </div>
@@ -157,7 +158,15 @@ export default async function Home() {
   );
 }
 
-function ActionCard({ title, desc, href, icon, delay }: any) {
+interface ActionCardProps {
+  title: string;
+  desc: string;
+  href: string;
+  icon: React.ReactNode;
+  delay?: number;
+}
+
+function ActionCard({ title, desc, href, icon }: ActionCardProps) {
   return (
     <Link href={href} className="glass-card group hover:scale-[1.02] active:scale-95 border border-[var(--glass-border)] hover:border-[var(--accent)]/50 relative overflow-hidden">
       <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500">

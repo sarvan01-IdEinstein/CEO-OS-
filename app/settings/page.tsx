@@ -43,10 +43,10 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto pt-12 space-y-8 animate-fade-in">
+        <div className="max-w-2xl mx-auto pt-6 sm:pt-12 space-y-6 sm:space-y-8 animate-fade-in">
             <div>
-                <h1 className="text-4xl font-serif font-bold mb-4">System Settings</h1>
-                <p className="text-[var(--muted)]">Configure the neural link.</p>
+                <h1 className="text-2xl sm:text-4xl font-serif font-bold mb-2 sm:mb-4">System Settings</h1>
+                <p className="text-[var(--muted)] text-sm sm:text-base">Configure the neural link.</p>
             </div>
 
             {/* AI Provider Selection */}
@@ -56,30 +56,30 @@ export default function SettingsPage() {
                     AI Provider
                 </h2>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
                     <button
                         onClick={() => setProvider('ollama')}
-                        className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${provider === 'ollama'
-                                ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                                : 'border-[var(--glass-border)] hover:border-[var(--accent)]/50'
+                        className={`p-3 sm:p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${provider === 'ollama'
+                            ? 'border-[var(--accent)] bg-[var(--accent)]/10'
+                            : 'border-[var(--glass-border)] hover:border-[var(--accent)]/50'
                             }`}
                     >
                         <Server size={24} className={provider === 'ollama' ? 'text-[var(--accent)]' : ''} />
                         <div className="text-left">
-                            <div className="font-bold">Ollama (Local)</div>
+                            <div className="font-bold text-sm sm:text-base">Ollama (Local)</div>
                             <div className="text-xs text-[var(--muted)]">Free, Private, Fast</div>
                         </div>
                     </button>
                     <button
                         onClick={() => setProvider('openai')}
-                        className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${provider === 'openai'
-                                ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                                : 'border-[var(--glass-border)] hover:border-[var(--accent)]/50'
+                        className={`p-3 sm:p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${provider === 'openai'
+                            ? 'border-[var(--accent)] bg-[var(--accent)]/10'
+                            : 'border-[var(--glass-border)] hover:border-[var(--accent)]/50'
                             }`}
                     >
                         <Cloud size={24} className={provider === 'openai' ? 'text-[var(--accent)]' : ''} />
                         <div className="text-left">
-                            <div className="font-bold">OpenAI (Cloud)</div>
+                            <div className="font-bold text-sm sm:text-base">OpenAI (Cloud)</div>
                             <div className="text-xs text-[var(--muted)]">GPT-4o, Paid</div>
                         </div>
                     </button>

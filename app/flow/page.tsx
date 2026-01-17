@@ -216,42 +216,42 @@ export default function DeepWorkFlow() {
             {/* Exit Button */}
             <button
                 onClick={() => window.location.href = '/'}
-                className="absolute top-8 right-8 z-[110] text-white/30 hover:text-white transition-colors flex items-center gap-2 group"
+                className="absolute top-4 right-4 sm:top-8 sm:right-8 z-[110] text-white/30 hover:text-white transition-colors flex items-center gap-2 group"
             >
                 <div className="p-2 border border-white/20 rounded-full group-hover:bg-white group-hover:text-black transition-all">
                     <X size={16} />
                 </div>
             </button>
 
-            <div className="relative z-10 w-full max-w-4xl p-8 grid grid-cols-12 gap-12 h-screen max-h-[800px]">
+            <div className="relative z-10 w-full max-w-4xl px-4 sm:px-8 py-8 flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 h-full overflow-y-auto">
 
                 {/* Center: The Focus */}
-                <div className="col-span-8 flex flex-col justify-center text-center space-y-12">
+                <div className="lg:col-span-8 flex flex-col justify-center text-center space-y-8 sm:space-y-12 py-8 lg:py-0">
                     <div>
                         <input
                             value={objective}
                             onChange={e => setObjective(e.target.value)}
                             placeholder="What is the One Thing?"
-                            className="text-4xl md:text-5xl font-serif text-center bg-transparent outline-none placeholder:opacity-20 w-full"
+                            className="text-xl sm:text-3xl md:text-5xl font-serif text-center bg-transparent outline-none placeholder:opacity-20 w-full"
                         />
                     </div>
 
                     <div className="flex flex-col items-center">
-                        <div className="text-[12rem] leading-none font-mono font-bold tracking-tighter tabular-nums opacity-90">
+                        <div className="text-6xl sm:text-8xl lg:text-[12rem] leading-none font-mono font-bold tracking-tighter tabular-nums opacity-90">
                             {formatTime(timeLeft)}
                         </div>
 
-                        <div className="flex gap-4 mt-8">
+                        <div className="flex gap-4 mt-6 sm:mt-8">
                             <button
                                 onClick={() => setIsActive(!isActive)}
-                                className="bg-white text-black rounded-full px-8 py-4 font-bold text-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
+                                className="bg-white text-black rounded-full px-6 sm:px-8 py-3 sm:py-4 font-bold text-lg sm:text-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3"
                             >
                                 {isActive ? <Pause /> : <Play />}
                                 {isActive ? 'PAUSE' : 'ENGAGE'}
                             </button>
                             <button
                                 onClick={() => setTimeLeft(60 * 60)}
-                                className="px-6 py-4 rounded-full border border-white/20 hover:bg-white/10 transition-all font-mono"
+                                className="px-4 sm:px-6 py-3 sm:py-4 rounded-full border border-white/20 hover:bg-white/10 transition-all font-mono"
                             >
                                 <Square size={20} />
                             </button>
@@ -259,8 +259,8 @@ export default function DeepWorkFlow() {
                     </div>
                 </div>
 
-                {/* Right: Environment & Distractions */}
-                <div className="col-span-4 border-l border-white/10 pl-8 flex flex-col h-full justify-center">
+                {/* Right: Environment & Distractions - moves to bottom on mobile */}
+                <div className="lg:col-span-4 lg:border-l border-white/10 lg:pl-8 flex flex-col pb-8 lg:pb-0 lg:h-full justify-center">
 
                     {/* Audio Controls */}
                     <div className="mb-8 p-4 bg-white/5 rounded-2xl border border-white/5">

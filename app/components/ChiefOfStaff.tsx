@@ -99,7 +99,7 @@ export default function ChiefOfStaff() {
                         initial={{ opacity: 0, y: 20, scale: 0.9 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                        className="fixed bottom-24 right-8 w-96 h-[500px] glass-card flex flex-col p-0 z-50 shadow-2xl border-t border-[var(--glass-border)]"
+                        className="fixed bottom-20 sm:bottom-24 right-4 sm:right-8 left-4 sm:left-auto w-auto sm:w-96 h-[70vh] sm:h-[500px] max-h-[600px] glass-card flex flex-col p-0 z-50 shadow-2xl border-t border-[var(--glass-border)]"
                     >
                         <div className="p-4 border-b border-[var(--border)] flex justify-between items-center bg-[var(--surface)]/50 backdrop-blur rounded-t-2xl">
                             <div className="flex items-center gap-2">
@@ -148,7 +148,7 @@ export default function ChiefOfStaff() {
 
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-[var(--fg)] text-[var(--bg-app)] shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group border border-[var(--glass-border)]"
+                className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--fg)] text-[var(--bg-app)] shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 group border border-[var(--glass-border)]"
             >
                 {isOpen ? <X size={24} /> : <Sparkles size={24} className="group-hover:animate-spin-slow" />}
             </button>

@@ -1,5 +1,5 @@
 import { getFile } from '@/lib/api';
-import Editor from '@/app/components/Editor'; // We might use a read-only view or just text
+import { ReviewFile } from '@/lib/types';
 
 export default async function GoalsPage() {
     const y1 = await getFile('goals/1_year.md');
@@ -10,7 +10,7 @@ export default async function GoalsPage() {
         <div className="space-y-12">
             <h1 className="text-3xl font-serif">Strategy Deck</h1>
 
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <GoalCard title="1 Year Execution" file={y1} />
                 <GoalCard title="3 Year Vision" file={y3} />
                 <GoalCard title="10 Year Direction" file={y10} />
@@ -19,7 +19,12 @@ export default async function GoalsPage() {
     );
 }
 
-function GoalCard({ title, file }: any) {
+interface GoalCardProps {
+    title: string;
+    file: ReviewFile | null;
+}
+
+function GoalCard({ title, file }: GoalCardProps) {
     if (!file) return null;
     // Simple content preview
     const preview = file.content.slice(0, 300) + '...';

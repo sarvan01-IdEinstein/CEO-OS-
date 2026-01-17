@@ -27,14 +27,14 @@ export default function LifestyleCalculator() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-12">
-            <div className="text-center space-y-4">
-                <h1 className="text-4xl font-serif">Lifestyle Design Calculator</h1>
-                <p className="text-[var(--muted)] max-w-xl mx-auto">
+            <div className="text-center space-y-4 px-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif">Lifestyle Design Calculator</h1>
+                <p className="text-[var(--muted)] max-w-xl mx-auto text-sm sm:text-base">
                     "People don't want to be millionaires — they want to experience what they believe only millions can buy." — Tim Ferriss
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {/* Left: Inputs */}
                 <div className="space-y-8">
                     <div className="card">
@@ -53,21 +53,23 @@ export default function LifestyleCalculator() {
 
                     <div className="card">
                         <h3 className="font-bold uppercase text-xs mb-4">2. The Dream Lines</h3>
-                        <div className="flex gap-2 mb-4">
+                        <div className="flex flex-col sm:flex-row gap-2 mb-4">
                             <input
                                 placeholder="Item (e.g. Aston Martin Lease)"
-                                className="flex-1 p-2 bg-[var(--bg)] border border-[var(--border)] rounded"
+                                className="flex-1 p-2 bg-[var(--bg)] border border-[var(--border)] rounded text-sm"
                                 value={newItem}
                                 onChange={e => setNewItem(e.target.value)}
                             />
-                            <input
-                                type="number"
-                                placeholder="Mthly Cost"
-                                className="w-24 p-2 bg-[var(--bg)] border border-[var(--border)] rounded"
-                                value={newCost}
-                                onChange={e => setNewCost(e.target.value)}
-                            />
-                            <button onClick={addItem} className="btn"><Plus size={16} /></button>
+                            <div className="flex gap-2">
+                                <input
+                                    type="number"
+                                    placeholder="Mthly Cost"
+                                    className="w-full sm:w-24 p-2 bg-[var(--bg)] border border-[var(--border)] rounded text-sm"
+                                    value={newCost}
+                                    onChange={e => setNewCost(e.target.value)}
+                                />
+                                <button onClick={addItem} className="btn shrink-0"><Plus size={16} /></button>
+                            </div>
                         </div>
 
                         <ul className="space-y-2">
@@ -86,18 +88,18 @@ export default function LifestyleCalculator() {
                 </div>
 
                 {/* Right: The Bill */}
-                <div className="card bg-[var(--fg)] text-white flex flex-col justify-center items-center text-center p-12">
+                <div className="card bg-[var(--fg)] text-white flex flex-col justify-center items-center text-center p-6 sm:p-12">
                     <Calculator size={48} className="mb-6 opacity-50" />
                     <div className="space-y-1">
-                        <h2 className="text-sm font-bold uppercase tracking-widest opacity-70">Target Monthly Income</h2>
-                        <p className="text-5xl font-mono font-bold">${totalMonthly.toLocaleString()}</p>
+                        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest opacity-70">Target Monthly Income</h2>
+                        <p className="text-3xl sm:text-5xl font-mono font-bold">${totalMonthly.toLocaleString()}</p>
                     </div>
 
                     <div className="w-full h-px bg-white/20 my-8"></div>
 
                     <div className="space-y-1">
-                        <h2 className="text-sm font-bold uppercase tracking-widest opacity-70">Target Annual Income (Pre-Tax)</h2>
-                        <p className="text-3xl font-mono">${Math.round(preTaxApprox).toLocaleString()}</p>
+                        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest opacity-70">Target Annual Income (Pre-Tax)</h2>
+                        <p className="text-2xl sm:text-3xl font-mono">${Math.round(preTaxApprox).toLocaleString()}</p>
                     </div>
 
                     <div className="mt-8 p-4 bg-white/10 rounded text-sm opacity-80">

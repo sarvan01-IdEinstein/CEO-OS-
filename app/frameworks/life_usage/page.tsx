@@ -1007,32 +1007,95 @@ export default function LifeUsagePage() {
     const bottomCategories = categories.filter(c => c.section === 'bottom');
 
     return (
-        <div className="min-h-[calc(100vh-80px)] flex flex-col animate-fade-in">
+        <div className="min-h-[calc(100vh-80px)] flex flex-col animate-fade-in overflow-x-hidden">
             {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-2">
-                    <button className="p-0 hover:bg-transparent" onClick={() => window.history.back()}>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+                <div className="flex items-center gap-2 min-w-0">
+                    <button className="p-0 hover:bg-transparent shrink-0" onClick={() => window.history.back()}>
                         <ArrowLeft size={20} className="text-gray-500" />
                     </button>
-                    <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                        {settings.name} <span className="text-green-500 text-sm font-normal">✓ Saved</span>
+                    <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2 truncate">
+                        <span className="truncate">{settings.name}</span> <span className="text-green-500 text-sm font-normal shrink-0">✓ Saved</span>
                     </h1>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                     {/* Settings and Share buttons */}
-                    <div className="flex items-center gap-2 ml-4">
-                        <button onClick={() => setShowSettings(true)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300" title="Settings">
-                            <Settings size={18} />
-                        </button>
-                        <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-300">
-                            <Share2 size={18} />
-                            Share
-                        </button>
-                    </div>
+                    <button onClick={() => setShowSettings(true)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-gray-600 dark:text-gray-300" title="Settings">
+                        <Settings size={18} />
+                    </button>
+                    <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-600 dark:text-gray-300">
+                        <Share2 size={18} />
+                        <span className="hidden sm:inline">Share</span>
+                    </button>
                 </div>
             </div>
-            {/* Main Timeline Area */}
-            <div className="glass-card flex-1 overflow-x-auto overflow-y-visible p-6 relative" ref={timelineRef}>
+            {/* MOBILE VIEW - Clean card-based layout for small screens */}
+            <div className="lg:hidden space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-4">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">
+                        📱 <strong>Mobile View:</strong> Your life timeline is shown as cards below. For the full visual timeline, use a tablet or desktop.
+                    </p>
+                </div>
+
+                {/* Current Age Card */}
+                <div className="glass-card p-4 text-center">
+                    <p className="text-sm text-[var(--muted)] mb-1">Current Age</p>
+                    <p className="text-3xl font-bold text-green-500">{currentAge.toFixed(1)}</p>
+                    <p className="text-xs text-[var(--muted)] mt-1">years old</p>
+                </div>
+
+                {/* Categories as Cards */}
+                {[...topCategories, ...bottomCategories].map(category => (
+                    <div key={category.id} className="glass-card p-4">
+                        <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-semibold text-[var(--accent)]">{category.name}</h3>
+                            <button
+                                onClick={() => setAddItemCategory(category.id)}
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                            >
+                                <Plus size={18} />
+                            </button>
+                        </div>
+                        {category.items.length === 0 ? (
+                            <p className="text-sm text-[var(--muted)] italic">No items yet</p>
+                        ) : (
+                            <ul className="space-y-2">
+                                {category.items.map(item => (
+                                    <li
+                                        key={item.id}
+                                        className={`p-3 rounded-lg text-sm cursor-pointer ${item.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900/50' : 'bg-red-100 dark:bg-red-900/50'}`}
+                                        onClick={() => setEditingItem({ categoryId: category.id, item })}
+                                    >
+                                        <div className="font-medium">{item.title}</div>
+                                        <div className="text-xs text-[var(--muted)] mt-1">
+                                            Age {item.startAge}{item.endAge ? ` - ${item.endAge}` : ' - Present'}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                ))}
+
+                {/* Bottom Actions - Mobile */}
+                <div className="flex gap-2 pt-4">
+                    <button
+                        onClick={() => setShowSettings(true)}
+                        className="flex-1 btn-ghost border border-[var(--glass-border)] py-3"
+                    >
+                        <Settings size={16} /> Settings
+                    </button>
+                    <button
+                        onClick={() => setShowCategories(true)}
+                        className="flex-1 btn-ghost border border-[var(--glass-border)] py-3"
+                    >
+                        <Edit2 size={16} /> Categories
+                    </button>
+                </div>
+            </div>
+
+            {/* DESKTOP VIEW - Full Timeline (hidden on mobile) */}
+            <div className="hidden lg:block glass-card flex-1 overflow-x-auto overflow-y-visible p-6 relative" ref={timelineRef}>
                 <div className="min-w-[1200px] relative" style={{ width: `${zoom}%` }}>
 
                     {/* Global Overlay Container for perfect alignment relative to timeline track */}
@@ -1057,9 +1120,9 @@ export default function LifeUsagePage() {
                     {/* Top Categories */}
                     <div className="space-y-1 relative">
                         {topCategories.map((category, catIndex) => (
-                            <div key={category.id} className="flex items-start min-h-[60px]">
-                                <div className="w-32 flex items-center justify-end pr-4 pt-2">
-                                    <span className="text-sm text-[var(--accent)] font-medium">{category.name}</span>
+                            <div key={category.id} className="flex items-start min-h-[50px] sm:min-h-[60px]">
+                                <div className="w-20 sm:w-32 flex items-center justify-end pr-2 sm:pr-4 pt-2">
+                                    <span className="text-xs sm:text-sm text-[var(--accent)] font-medium text-right">{category.name}</span>
                                     <button
                                         onClick={() => setAddItemCategory(category.id)}
                                         className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
@@ -1107,13 +1170,13 @@ export default function LifeUsagePage() {
 
                     {/* Age Axis - Individual boxed cells for each age */}
                     <div className="flex items-center my-3">
-                        <div className="w-32 flex items-center justify-end pr-4">
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm">
-                                <Calendar size={14} className="text-[var(--accent)]" />
-                                <span className="text-sm font-semibold text-[var(--accent)]">Age</span>
+                        <div className="w-20 sm:w-32 flex items-center justify-end pr-2 sm:pr-4">
+                            <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm">
+                                <Calendar size={12} className="text-[var(--accent)]" />
+                                <span className="text-xs sm:text-sm font-semibold text-[var(--accent)]">Age</span>
                             </div>
                         </div>
-                        <div className="flex-1 relative h-8">
+                        <div className="flex-1 relative h-6 sm:h-8">
                             {/* Age boxes container */}
                             <div className="absolute inset-0 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-900/50">
                                 {ageMarkers.map((age, index) => {
@@ -1157,18 +1220,18 @@ export default function LifeUsagePage() {
                     {/* Bottom Categories */}
                     <div className="space-y-1 relative">
                         {bottomCategories.map((category, catIndex) => (
-                            <div key={category.id} className="flex items-end min-h-[60px]">
-                                <div className="w-32 flex items-center justify-end pr-4 pb-2">
-                                    <span className="text-sm text-[var(--accent)] font-medium">{category.name}</span>
+                            <div key={category.id} className="flex items-end min-h-[50px] sm:min-h-[60px]">
+                                <div className="w-20 sm:w-32 flex items-center justify-end pr-2 sm:pr-4 pb-2">
+                                    <span className="text-xs sm:text-sm text-[var(--accent)] font-medium text-right">{category.name}</span>
                                     <button
                                         onClick={() => setAddItemCategory(category.id)}
-                                        className="ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                                        className="ml-1 sm:ml-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
                                         title={`Add ${category.name} item`}
                                     >
-                                        <Plus size={14} />
+                                        <Plus size={12} className="sm:w-3.5 sm:h-3.5" />
                                     </button>
                                 </div>
-                                <div className="flex-1 h-12 relative bg-[#fecaca] dark:bg-red-900/30 rounded-sm">
+                                <div className="flex-1 h-10 sm:h-12 relative bg-[#fecaca] dark:bg-red-900/30 rounded-sm">
                                     {/* Render items */}
                                     {filterItems(category.items).map(item => (
                                         <TimelineItem
@@ -1207,15 +1270,15 @@ export default function LifeUsagePage() {
                 </div>
             </div>
 
-            {/* Bottom Controls - Premium styled bar */}
-            <div className="flex items-center justify-between mt-4 px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-[var(--muted)]">View</span>
-                        <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+            {/* Bottom Controls - Premium styled bar (desktop only) */}
+            <div className="hidden lg:flex items-center justify-between mt-4 px-4 py-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto overflow-x-auto">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <span className="text-xs sm:text-sm font-medium text-[var(--muted)] hidden sm:inline">View</span>
+                        <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full p-0.5 sm:p-1">
                             <button
                                 onClick={() => setViewMode('all')}
-                                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${viewMode === 'all'
+                                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${viewMode === 'all'
                                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-sm'
                                     : 'text-[var(--muted)] hover:text-[var(--fg)]'
                                     }`}
@@ -1224,7 +1287,7 @@ export default function LifeUsagePage() {
                             </button>
                             <button
                                 onClick={() => setViewMode('past')}
-                                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${viewMode === 'past'
+                                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${viewMode === 'past'
                                     ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm'
                                     : 'text-[var(--muted)] hover:text-[var(--fg)]'
                                     }`}
@@ -1233,7 +1296,7 @@ export default function LifeUsagePage() {
                             </button>
                             <button
                                 onClick={() => setViewMode('future')}
-                                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${viewMode === 'future'
+                                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${viewMode === 'future'
                                     ? 'bg-gradient-to-r from-red-400 to-red-500 text-white shadow-sm'
                                     : 'text-[var(--muted)] hover:text-[var(--fg)]'
                                     }`}
@@ -1244,29 +1307,29 @@ export default function LifeUsagePage() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-[var(--muted)]">Zoom</span>
-                        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5">
-                            <span className="text-xs text-[var(--muted)] w-6">50%</span>
+                <div className="flex items-center gap-3 sm:gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <span className="text-xs sm:text-sm font-medium text-[var(--muted)]">Zoom</span>
+                        <div className="flex items-center gap-1 sm:gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg px-2 sm:px-3 py-1 sm:py-1.5">
+                            <span className="text-xs text-[var(--muted)] hidden sm:inline w-6">50%</span>
                             <input
                                 type="range"
                                 min={50}
                                 max={200}
                                 value={zoom}
                                 onChange={(e) => setZoom(parseInt(e.target.value))}
-                                className="w-24 accent-[var(--accent)]"
+                                className="w-16 sm:w-24 accent-[var(--accent)]"
                             />
-                            <span className="text-xs text-[var(--muted)] w-8">200%</span>
+                            <span className="text-xs text-[var(--muted)] hidden sm:inline w-8">200%</span>
                             <span className="text-xs font-semibold text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-0.5 rounded">{zoom}%</span>
                         </div>
                     </div>
                     <button
                         onClick={() => setShowCategories(true)}
-                        className="btn-ghost text-sm flex items-center gap-2 border border-gray-200 dark:border-gray-700"
+                        className="btn-ghost text-xs sm:text-sm flex items-center gap-1 sm:gap-2 border border-gray-200 dark:border-gray-700 shrink-0"
                     >
                         <Settings size={14} />
-                        Manage Categories
+                        <span className="hidden sm:inline">Manage Categories</span>
                     </button>
                 </div>
             </div>

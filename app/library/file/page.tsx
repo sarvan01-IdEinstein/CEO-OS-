@@ -140,26 +140,28 @@ Be concise, actionable, and Socratic. Ask clarifying questions if needed.`;
     return (
         <div className="h-[85vh] flex flex-col animate-fade-in">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4 pb-4 border-b border-[var(--glass-border)]">
-                <div className="flex items-center gap-4">
-                    <Link href="/library" className="text-[var(--muted)] hover:text-[var(--fg)]"><ArrowLeft size={18} /></Link>
-                    <h1 className="text-lg font-mono opacity-70">{path}</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 pb-4 border-b border-[var(--glass-border)]">
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                    <Link href="/library" className="text-[var(--muted)] hover:text-[var(--fg)] shrink-0"><ArrowLeft size={18} /></Link>
+                    <h1 className="text-sm sm:text-lg font-mono opacity-70 truncate">{path}</h1>
                 </div>
-                <button
-                    onClick={() => { setShowAI(!showAI); if (!showAI && messages.length === 0) setMessages([{ role: 'assistant', content: "How can I help you apply this framework?" }]); }}
-                    className={`btn-primary flex items-center gap-2 ${showAI ? 'bg-rose-500' : ''}`}
-                >
-                    {showAI ? 'Close AI' : 'Apply with AI'}
-                </button>
-                {path?.includes('goals/') && (
+                <div className="flex flex-wrap items-center gap-2">
                     <button
-                        onClick={handleGenerateOKRs}
-                        disabled={aiLoading}
-                        className="btn bg-[var(--accent)] text-white flex items-center gap-2 ml-4 animate-fade-in"
+                        onClick={() => { setShowAI(!showAI); if (!showAI && messages.length === 0) setMessages([{ role: 'assistant', content: "How can I help you apply this framework?" }]); }}
+                        className={`btn-primary flex items-center gap-2 text-sm ${showAI ? 'bg-rose-500' : ''}`}
                     >
-                        <Sparkles size={16} /> Generate OKRs
+                        {showAI ? 'Close AI' : 'Apply with AI'}
                     </button>
-                )}
+                    {path?.includes('goals/') && (
+                        <button
+                            onClick={handleGenerateOKRs}
+                            disabled={aiLoading}
+                            className="btn bg-[var(--accent)] text-white flex items-center gap-2 text-sm"
+                        >
+                            <Sparkles size={16} /> <span className="hidden sm:inline">Generate</span> OKRs
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Main Content */}
@@ -169,9 +171,9 @@ Be concise, actionable, and Socratic. Ask clarifying questions if needed.`;
                     <Editor initialContent={content} onSave={handleSave} />
                 </div>
 
-                {/* AI Panel */}
+                {/* AI Panel - full width on mobile when open */}
                 {showAI && (
-                    <div className="w-2/5 glass-card flex flex-col p-0 overflow-hidden">
+                    <div className="fixed inset-0 sm:relative sm:inset-auto w-full sm:w-2/5 glass-card flex flex-col p-0 overflow-hidden z-50 sm:z-auto">
                         <div className="p-4 border-b border-[var(--glass-border)] bg-[var(--accent)]/10">
                             <h3 className="font-bold text-sm uppercase tracking-wider flex items-center gap-2">
                                 <Sparkles size={14} className="text-[var(--accent)]" /> Knowledge Engine

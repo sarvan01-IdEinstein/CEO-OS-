@@ -31,41 +31,67 @@ export default function ReviewsIndex() {
 
     return (
         <div className="animate-fade-in">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-serif">Reviews Log</h1>
-                <div className="space-x-4">
-                    <Link href="/reviews/new?type=daily" className="btn">New Daily</Link>
-                    <Link href="/reviews/new?type=weekly" className="btn bg-[var(--surface)] text-[var(--fg)] border border-[var(--glass-border)]">New Weekly</Link>
+            {/* Header - stacks on mobile */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                <h1 className="text-2xl sm:text-3xl font-serif">Reviews Log</h1>
+                <div className="flex flex-wrap gap-2">
+                    <Link href="/reviews/new?type=daily" className="btn text-sm">New Daily</Link>
+                    <Link href="/reviews/new?type=weekly" className="btn bg-[var(--surface)] text-[var(--fg)] border border-[var(--glass-border)] text-sm">New Weekly</Link>
                 </div>
             </div>
 
-            <div className="glass-card">
-                <div className="grid grid-cols-12 border-b border-[var(--border)] p-4 text-xs font-bold uppercase text-[var(--muted)] opacity-70">
+            <div className="glass-card overflow-x-auto">
+                {/* Table Header - hide some columns on mobile */}
+                <div className="hidden sm:grid grid-cols-12 border-b border-[var(--border)] p-4 text-xs font-bold uppercase text-[var(--muted)] opacity-70 min-w-[400px]">
                     <span className="col-span-5">Date/Name</span>
                     <span className="col-span-3">Type</span>
                     <span className="col-span-2">Energy</span>
                     <span className="col-span-2 text-right">Action</span>
                 </div>
+
+                {/* Mobile-friendly card list */}
                 {files.map(file => {
                     const type = file.path.includes('daily') ? 'Daily' : file.path.includes('weekly') ? 'Weekly' : 'Quarterly';
                     return (
-                        <div key={file.path} className="grid grid-cols-12 p-4 border-b border-[var(--border)] last:border-0 hover:bg-[var(--accent)]/5 transition-colors text-sm items-center group">
-                            <span className="col-span-5 font-mono opacity-90">{file.name.replace('.md', '')}</span>
-                            <span className="col-span-3 opacity-70 flex items-center gap-2">
-                                <span className={`w-2 h-2 rounded-full ${type === 'Daily' ? 'bg-blue-400' : type === 'Weekly' ? 'bg-purple-400' : 'bg-orange-400'}`}></span>
-                                {type}
-                            </span>
-                            <span className="col-span-2 font-mono opacity-60">{file.energyLevel || '-'}</span>
-                            <div className="col-span-2 flex justify-end gap-3 items-center">
-                                <Link href={`/library/file?path=${encodeURIComponent(file.path)}`} className="text-[var(--accent)] hover:underline font-bold text-xs uppercase tracking-wider">
-                                    View
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(file.path)}
-                                    className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded"
-                                >
-                                    <Trash2 size={14} />
-                                </button>
+                        <div key={file.path} className="p-4 border-b border-[var(--border)] last:border-0 hover:bg-[var(--accent)]/5 transition-colors group">
+                            {/* Mobile Layout */}
+                            <div className="sm:hidden space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="font-mono text-sm font-medium">{file.name.replace('.md', '')}</span>
+                                    <span className={`px-2 py-0.5 rounded-full text-xs ${type === 'Daily' ? 'bg-blue-500/20 text-blue-400' : type === 'Weekly' ? 'bg-purple-500/20 text-purple-400' : 'bg-orange-500/20 text-orange-400'}`}>
+                                        {type}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-[var(--muted)]">Energy: {file.energyLevel || '-'}</span>
+                                    <div className="flex gap-3">
+                                        <Link href={`/library/file?path=${encodeURIComponent(file.path)}`} className="text-[var(--accent)] font-bold text-xs uppercase">View</Link>
+                                        <button onClick={() => handleDelete(file.path)} className="text-red-400 p-1">
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Desktop Layout */}
+                            <div className="hidden sm:grid grid-cols-12 text-sm items-center">
+                                <span className="col-span-5 font-mono opacity-90">{file.name.replace('.md', '')}</span>
+                                <span className="col-span-3 opacity-70 flex items-center gap-2">
+                                    <span className={`w-2 h-2 rounded-full ${type === 'Daily' ? 'bg-blue-400' : type === 'Weekly' ? 'bg-purple-400' : 'bg-orange-400'}`}></span>
+                                    {type}
+                                </span>
+                                <span className="col-span-2 font-mono opacity-60">{file.energyLevel || '-'}</span>
+                                <div className="col-span-2 flex justify-end gap-3 items-center">
+                                    <Link href={`/library/file?path=${encodeURIComponent(file.path)}`} className="text-[var(--accent)] hover:underline font-bold text-xs uppercase tracking-wider">
+                                        View
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(file.path)}
+                                        className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-500/10 rounded"
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )

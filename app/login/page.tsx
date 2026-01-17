@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { ArrowLeft, Mail, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useToastHelpers } from '@/app/components/ToastContext';
 
 export default function LoginPage() {
     const supabase = createClient();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const toast = useToastHelpers();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,9 +25,10 @@ export default function LoginPage() {
         });
 
         if (error) {
-            alert('Error creating magic link: ' + error.message);
+            toast.error('Error creating magic link: ' + error.message);
         } else {
             setSubmitted(true);
+            toast.success('Magic link sent! Check your email.');
         }
         setLoading(false);
     };

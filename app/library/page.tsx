@@ -13,17 +13,17 @@ export default function LibraryPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-serif mb-8">System Library</h1>
-            <div className="grid grid-cols-3 gap-4">
+            <h1 className="text-2xl sm:text-3xl font-serif mb-6 sm:mb-8">System Library</h1>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 {folders.map(f => {
                     const isFile = f.path.endsWith('.md');
                     const href = isFile ? `/library/file?path=${f.path}` : `/library/folder?path=${f.path}`;
                     return (
-                        <Link key={f.name} href={href} className="card flex items-center gap-4 hover:border-[var(--accent)] group">
-                            <div className="bg-[var(--bg)] p-3 rounded text-[var(--muted)] group-hover:text-[var(--accent)]">
-                                <Folder />
+                        <Link key={f.name} href={href} className="card flex flex-col sm:flex-row items-center gap-2 sm:gap-4 hover:border-[var(--accent)] group p-4">
+                            <div className="bg-[var(--bg)] p-2 sm:p-3 rounded text-[var(--muted)] group-hover:text-[var(--accent)]">
+                                <Folder size={20} />
                             </div>
-                            <span className="font-medium text-lg">{f.name}</span>
+                            <span className="font-medium text-sm sm:text-lg text-center sm:text-left">{f.name}</span>
                         </Link>
                     );
                 })}

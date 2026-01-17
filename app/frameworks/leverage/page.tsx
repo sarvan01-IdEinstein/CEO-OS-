@@ -84,43 +84,45 @@ export default function LeverageLab() {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
             <div>
-                <h1 className="text-3xl font-serif">The Leverage Lab</h1>
-                <p className="text-[var(--muted)]">Input thoughts, define physics, get strategy.</p>
+                <h1 className="text-2xl sm:text-3xl font-serif">The Leverage Lab</h1>
+                <p className="text-[var(--muted)] text-sm sm:text-base">Input thoughts, define physics, get strategy.</p>
             </div>
 
-            {/* Input Section */}
-            <div className="card bg-[var(--surface)] flex gap-4 items-end">
+            {/* Input Section - stacks on mobile */}
+            <div className="card bg-[var(--surface)] flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-end">
                 <div className="flex-1">
                     <label className="text-xs font-bold uppercase tracking-wider block mb-2">Task</label>
                     <input
-                        className="w-full p-2"
+                        className="w-full p-2 text-sm"
                         placeholder="What needs doing?"
                         value={newTask}
                         onChange={e => setNewTask(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && addTask()}
                     />
                 </div>
-                <div>
-                    <label className="text-xs font-bold uppercase tracking-wider block mb-2">Impact</label>
-                    <select className="p-2 bg-[var(--bg)] border border-[var(--border)] rounded" value={impact} onChange={(e: any) => setImpact(e.target.value)}>
-                        <option>High</option>
-                        <option>Low</option>
-                    </select>
+                <div className="flex gap-3 sm:gap-4">
+                    <div className="flex-1 sm:flex-none">
+                        <label className="text-xs font-bold uppercase tracking-wider block mb-2">Impact</label>
+                        <select className="w-full p-2 bg-[var(--bg)] border border-[var(--border)] rounded text-sm" value={impact} onChange={(e: any) => setImpact(e.target.value)}>
+                            <option>High</option>
+                            <option>Low</option>
+                        </select>
+                    </div>
+                    <div className="flex-1 sm:flex-none">
+                        <label className="text-xs font-bold uppercase tracking-wider block mb-2">Effort</label>
+                        <select className="w-full p-2 bg-[var(--bg)] border border-[var(--border)] rounded text-sm" value={effort} onChange={(e: any) => setEffort(e.target.value)}>
+                            <option>High</option>
+                            <option>Low</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label className="text-xs font-bold uppercase tracking-wider block mb-2">Effort</label>
-                    <select className="p-2 bg-[var(--bg)] border border-[var(--border)] rounded" value={effort} onChange={(e: any) => setEffort(e.target.value)}>
-                        <option>High</option>
-                        <option>Low</option>
-                    </select>
-                </div>
-                <button onClick={addTask} className="btn h-[42px]"><Plus size={18} /> Add</button>
+                <button onClick={addTask} className="btn h-[42px] shrink-0"><Plus size={18} /> Add</button>
             </div>
 
-            {/* The Matrix */}
-            <div className="grid grid-cols-2 gap-6 h-[500px]">
+            {/* The Matrix - stacks on mobile */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 sm:min-h-[500px]">
                 <Quadrant i="High" e="Low" color="#22c55e" />     {/* Green - DO */}
                 <Quadrant i="High" e="High" color="#3b82f6" />    {/* Blue - DEFER */}
                 <Quadrant i="Low" e="Low" color="#eab308" />     {/* Yellow - DELEGATE */}
