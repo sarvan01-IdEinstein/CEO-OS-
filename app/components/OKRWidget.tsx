@@ -11,10 +11,15 @@ export default function OKRWidget() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getOKRs().then(data => {
-            setOkrs(data);
-            setLoading(false);
-        });
+        getOKRs()
+            .then(data => {
+                setOkrs(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Failed to load OKRs", err);
+                setLoading(false);
+            });
     }, []);
 
     if (loading) return <div className="animate-pulse h-32 bg-[var(--surface)] rounded-2xl"></div>;
@@ -25,7 +30,7 @@ export default function OKRWidget() {
 
     if (objectives.length === 0) {
         return (
-            <div className="card flex flex-col items-center justify-center text-center p-8 border-dashed border-2 border-[var(--border)]">
+            <div className="glass-card flex flex-col items-center justify-center text-center p-8">
                 <Target size={48} className="text-[var(--muted)] mb-4" />
                 <h3 className="font-bold text-lg">No OKRs Set</h3>
                 <p className="text-[var(--muted)] text-sm mb-4">Transform your strategy into measurable goals.</p>

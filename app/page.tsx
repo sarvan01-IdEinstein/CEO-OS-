@@ -5,7 +5,7 @@ import Heatmap from './components/Heatmap';
 import WisdomWidget from './components/WisdomWidget';
 import MementoMori from './components/MementoMori';
 import DailyCycleWidget from './components/DailyCycleWidget';
-import TeamPulseWidget from './components/TeamPulseWidget';
+import DomainsWidget from './components/DomainsWidget';
 import Link from 'next/link';
 import { ArrowRight, Zap, Target, ArrowUpRight, Flame, Layers, Power, Brain } from 'lucide-react';
 import OKRWidget from './components/OKRWidget';
@@ -113,7 +113,7 @@ export default async function Home() {
         <div className="lg:col-span-4 space-y-6">
 
           {/* Energy Trend - Moved Here */}
-          <div className="glass-card flex flex-col gap-4 border border-[var(--accent)]/20">
+          <div className="glass-card flex flex-col gap-4 border border-[var(--accent)]/20 h-[300px]">
             <div className="flex justify-between items-center">
               <div className="text-[10px] font-bold uppercase text-[var(--muted)] tracking-widest">Energy Trend</div>
               <div className="text-right flex items-baseline gap-1">
@@ -123,7 +123,7 @@ export default async function Home() {
                 <span className="text-xs text-[var(--muted)]">/10</span>
               </div>
             </div>
-            <div className="h-32 w-full">
+            <div className="h-full w-full">
               <EnergyChart data={analytics.energyTrend} />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <TeamPulseWidget />
+          <DomainsWidget />
 
           <div className="glass-card bg-gradient-to-br from-[var(--glass-surface)] to-[var(--accent)]/10">
             <div className="flex items-center gap-3 mb-6 text-[var(--accent)]">

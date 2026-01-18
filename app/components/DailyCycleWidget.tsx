@@ -35,7 +35,7 @@ export default function DailyCycleWidget() {
     // STATE 1: MORNING PRIME (No log yet)
     if (status === 'morning') {
         return (
-            <div className="glass-card relative overflow-hidden group hover:border-[var(--accent)] transition-colors p-8 flex flex-col justify-center">
+            <div className="glass-card relative overflow-hidden group hover:border-[var(--accent)] transition-colors p-8 flex flex-col justify-center h-[300px]">
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                     <Sun size={80} />
                 </div>
@@ -56,7 +56,7 @@ export default function DailyCycleWidget() {
     // STATE 2: ACTIVE FOCUS (Log exists, but not shutdown)
     if (status === 'active') {
         return (
-            <div className="glass-card bg-gradient-to-br from-[var(--glass-surface)] to-[var(--accent)]/10 p-8 flex flex-col justify-between relative overflow-hidden">
+            <div className="glass-card bg-gradient-to-br from-[var(--glass-surface)] to-[var(--accent)]/10 p-8 flex flex-col justify-between relative overflow-hidden h-[300px]">
                 <div className="absolute -right-4 -top-4 opacity-5">
                     <Target size={120} />
                 </div>
@@ -76,7 +76,7 @@ export default function DailyCycleWidget() {
                     <Link href="/flow" className="btn flex-1 flex justify-center items-center gap-2">
                         <Target size={16} /> Enter Flow
                     </Link>
-                    <Link href="/shutdown" className="btn bg-[var(--surface)] text-[var(--fg)] border border-[var(--glass-border)] flex-1 flex justify-center items-center gap-2">
+                    <Link href="/shutdown" className="btn bg-[var(--surface)] text-[var(--fg)] border border-[var(--glass-border)] hover:bg-red-500/5 hover:border-red-500/30 hover:text-red-500 transition-all flex-1 flex justify-center items-center gap-2">
                         <Moon size={16} /> Evening Shutdown
                     </Link>
                 </div>
@@ -86,7 +86,7 @@ export default function DailyCycleWidget() {
 
     // STATE 3: COMPLETE (Shutdown done)
     return (
-        <div className="glass-card flex flex-col justify-center items-center text-center p-8 opacity-90">
+        <div className="glass-card flex flex-col justify-center items-center text-center p-8 opacity-90 h-[300px]">
             <div className="mb-4 text-[var(--accent)]">
                 <CheckCircle size={48} />
             </div>
